@@ -2,14 +2,15 @@ package nl.tudelft.jpacman.board;
 
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Tests the Board Class.
+ */
 public class BoardTest {
 
     /**
-     * Tests if board is created correctly by checking its dimensions and its content
+     * Tests if board is created correctly by checking its dimensions and its content.
      */
     @Test
     void testBoardCreation() {
@@ -18,6 +19,18 @@ public class BoardTest {
         assertThat(tBoard.getHeight()).isEqualTo(1);
         assertThat(tBoard.getWidth()).isEqualTo(1);
         assertThat(tBoard.invariant()).isEqualTo(true);
-        assertThat(tBoard.squareAt(0,0)).isEqualTo(basicSquare);
+        assertThat(tBoard.squareAt(0, 0)).isEqualTo(basicSquare);
+    }
+
+    /**
+     * Tests if board is created correctly by checking
+     * its dimensions and its content but initializes board with null.
+     */
+    @Test
+    void testBoardCreationNull() {
+        Board tBoard = new Board(new Square[][]{new Square[]{null}});
+        assertThat(tBoard.getHeight()).isEqualTo(1);
+        assertThat(tBoard.getWidth()).isEqualTo(1);
+        assertThat(tBoard.squareAt(0, 0)).isEqualTo(null);
     }
 }
