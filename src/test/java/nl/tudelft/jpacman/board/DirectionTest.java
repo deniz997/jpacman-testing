@@ -17,6 +17,17 @@ public class DirectionTest {
     @Test
     void testNorth() {
         Direction north = Direction.valueOf("NORTH");
+        assertThat(north.getDeltaX()).isEqualTo(0);
         assertThat(north.getDeltaY()).isEqualTo(-1);
+    }
+
+    /**
+     * Do we get the correct delta when moving south?
+     */
+    @Test
+    void testSouth() {
+        Direction north = Direction.valueOf("SOUTH");
+        assertThat(north.getDeltaX()).isEqualTo(0);
+        assertThat(north.getDeltaY()).isEqualTo(1);
     }
 }
