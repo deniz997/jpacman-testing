@@ -44,7 +44,7 @@ class OccupantTest {
         unit.occupy(bsquare);
         assertThat(unit.hasSquare()).isEqualTo(true);
         assertThat(unit.getSquare()).isEqualTo(bsquare);
-        assertThat(bsquare.getOccupants()).contains(unit).isEqualTo(true);
+        assertThat(bsquare.getOccupants().contains(unit)).isEqualTo(true);
     }
 
     /**
