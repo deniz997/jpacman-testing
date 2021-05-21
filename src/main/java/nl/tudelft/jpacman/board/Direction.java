@@ -59,7 +59,7 @@ public enum Direction {
      *         direction, in a matrix with 0,0 (x,y) as its top-left element.
      */
     public int getDeltaX() {
-        return deltaY;
+        return deltaX;
     }
 
     /**
