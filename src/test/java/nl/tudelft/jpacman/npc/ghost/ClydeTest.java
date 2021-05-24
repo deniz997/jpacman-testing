@@ -61,4 +61,69 @@ public class ClydeTest {
         assertThat(dir).isPresent();
         assertThat(dir.get()).isEqualTo(Direction.WEST);
     }
+
+    /**
+     * Tests if Clyde moves away from the player
+     * if he is smaller than shyness(default=8) spaces away from player.
+     */
+    @Test
+    public void testIfClydeMovesAwayFromPlayerIfMoreThanShynessSpacesAway() {
+        char[][] map = new char[][]{
+            "############".toCharArray(),
+            "#P C       #".toCharArray(),
+            "############".toCharArray()
+        };
+        Level level = ghostMapParser.parseMap(Tools.rotateMap(map));
+
+        level.registerPlayer(player);
+        player.setDirection(Direction.EAST);
+
+        Clyde clyde = Navigation.findUnitInBoard(Clyde.class, level.getBoard());
+        assertThat(clyde).isNotNull();
+        Optional<Direction> dir = clyde.nextAiMove();
+        assertThat(dir).isPresent();
+        assertThat(dir.get()).isEqualTo(Direction.EAST);
+    }
+
+    /**
+     * Tests if Clyde has no direction,
+     * when there is a wall in between, thus no available path to the player.
+     */
+    @Test
+    public void testIfNoPathToGo() {
+        char[][] map = new char[][]{
+            "############".toCharArray(),
+            "#P    #   C#".toCharArray(),
+            "############".toCharArray()
+        };
+        Level level = ghostMapParser.parseMap(Tools.rotateMap(map));
+
+        level.registerPlayer(player);
+        player.setDirection(Direction.EAST);
+
+        Clyde clyde = Navigation.findUnitInBoard(Clyde.class, level.getBoard());
+        assertThat(clyde).isNotNull();
+        Optional<Direction> dir = clyde.nextAiMove();
+        assertThat(dir).isEmpty();
+    }
+
+    /**
+     * Tests if Clyde has no direction,
+     * when there is no player.
+     */
+    @Test
+    public void testIfNoPlayerExists() {
+        char[][] map = new char[][]{
+            "############".toCharArray(),
+            "#         C#".toCharArray(),
+            "############".toCharArray()
+        };
+        Level level = ghostMapParser.parseMap(Tools.rotateMap(map));
+
+        Clyde clyde = Navigation.findUnitInBoard(Clyde.class, level.getBoard());
+        assertThat(clyde).isNotNull();
+        Optional<Direction> dir = clyde.nextAiMove();
+        assertThat(dir).isEmpty();
+    }
+
 }
