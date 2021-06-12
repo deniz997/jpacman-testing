@@ -2,13 +2,11 @@ package nl.tudelft.jpacman.level;
 
 import nl.tudelft.jpacman.npc.Ghost;
 import nl.tudelft.jpacman.points.PointCalculator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Test-Suites for testing player collisions with all combinations.
@@ -16,10 +14,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public abstract class CollisionMapTest {
 
-    protected CollisionMap collisionMap;
+    private CollisionMap collisionMap;
 
     @Mock
-    protected PointCalculator pointCalculator;
+    private PointCalculator pointCalculator;
 
     @Mock
     private Player player;
@@ -133,5 +131,22 @@ public abstract class CollisionMapTest {
         verify(pointCalculator, times(1)).consumedAPellet(player, pellet);
         verify(pellet, times(1)).leaveSquare();
     }
+
+    /**
+     * Sets collision map.
+     * @param collMap -> can be an instance of PlayerCollision or DefaultPlayerInteractionMap.
+     */
+    void setCollisionMap(CollisionMap collMap) {
+        this.collisionMap = collMap;
+    }
+
+    /**
+     * Gets point calculator.
+     * @return pointCalculator to access private point calculator object.
+     */
+    PointCalculator getPointCalculator() {
+        return this.pointCalculator;
+    }
+
 
 }
