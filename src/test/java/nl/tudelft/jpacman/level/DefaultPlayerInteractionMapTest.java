@@ -7,7 +7,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 /**
  *
  */
-public class PlayerCollisionsTest extends  CollisionMapTest {
+
+public class DefaultPlayerInteractionMapTest extends CollisionMapTest {
 
     /**
      *
@@ -15,6 +16,6 @@ public class PlayerCollisionsTest extends  CollisionMapTest {
     @BeforeEach
     void setup() {
         initMocks(this);
-        this.collisionMap = new PlayerCollisions(this.pointCalculator);
+        this.collisionMap = new DefaultPlayerInteractionMap(this.pointCalculator);
     }
 }
