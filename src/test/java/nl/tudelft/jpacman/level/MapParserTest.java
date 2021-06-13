@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -184,7 +185,8 @@ public class MapParserTest {
      */
     @Test
     void testIfMapIsCorrectlyReadFromInputStream() throws IOException {
-        InputStream anyInputStream = new ByteArrayInputStream(" #\n##\n  ".getBytes());
+        InputStream anyInputStream =
+            new ByteArrayInputStream(" #\n##\n  ".getBytes(StandardCharsets.UTF_8));
 
         final Square[][] expected = new Square[][]{
             {ground, wall, ground},
