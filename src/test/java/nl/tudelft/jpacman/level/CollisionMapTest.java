@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Test-Suites for testing player collisions with all combinations.
  */
-
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public abstract class CollisionMapTest {
 
     private CollisionMap collisionMap;
@@ -25,6 +25,11 @@ public abstract class CollisionMapTest {
     private Ghost ghost;
     @Mock
     private Pellet pellet;
+
+    /**
+     * Setup the mock objects.
+     */
+    protected abstract void setup();
 
     /**
      * Checks if player dies after the collision of player and ghost.

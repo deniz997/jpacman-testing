@@ -12,8 +12,9 @@ public class PlayerCollisionsTest extends CollisionMapTest {
     /**
      * Setup mocks and inits collision map as PlayerCollisions.
      */
+    @Override
     @BeforeEach
-    void setup() {
+    protected void setup() {
         initMocks(this);
         setCollisionMap(new PlayerCollisions(getPointCalculator()));
     }

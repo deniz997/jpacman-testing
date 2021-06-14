@@ -13,8 +13,9 @@ public class DefaultPlayerInteractionMapTest extends CollisionMapTest {
     /**
      * Setup mocks and inits collision map as DefaultPlayerInteractionMap.
      */
+    @Override
     @BeforeEach
-    void setup() {
+    protected void setup() {
         initMocks(this);
         setCollisionMap(new DefaultPlayerInteractionMap(getPointCalculator()));
     }
