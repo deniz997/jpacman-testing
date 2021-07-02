@@ -66,6 +66,36 @@ public class PlayerMovementTest {
     }
 
     /**
+     * Scenario S2.2: The player moves on empty square
+     * Given the game has started,
+     *  and  my Pacman is next to an empty square;
+     * When  I press an arrow key towards that square;
+     * Then  my Pacman can move to that square
+     *  and  my points remain the same.
+     */
+    @Test
+    public void playerMovesOnEmptySquareTest() {
+        //Given the game has started
+        assertThat(getGame().isInProgress()).isTrue();
+
+        Player p = getGame().getPlayers().get(0);
+        assertThat(p.getScore()).isEqualTo(0);
+        Square squareNextToPlayer = p.getSquare().getSquareAt(Direction.NORTH);
+
+        //and  my Pacman is next to an empty square;
+        assertThat(squareNextToPlayer.getOccupants().size()).isEqualTo(0);
+
+        //When  I press an arrow key towards that square;
+        getGame().move(p, Direction.NORTH);
+
+        //Then  my Pacman can move to that square,
+        assertThat(p.getSquare()).isEqualTo(squareNextToPlayer);
+
+        // and  my points remain the same.
+        assertThat(p.getScore()).isEqualTo(0);
+    }
+
+    /**
      * Close the user interface.
      */
     @AfterEach
