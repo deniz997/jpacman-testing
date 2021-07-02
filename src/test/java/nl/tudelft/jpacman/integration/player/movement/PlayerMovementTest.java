@@ -6,6 +6,7 @@ import nl.tudelft.jpacman.board.Square;
 import nl.tudelft.jpacman.game.Game;
 import nl.tudelft.jpacman.level.Pellet;
 import nl.tudelft.jpacman.level.Player;
+import nl.tudelft.jpacman.npc.Ghost;
 import nl.tudelft.jpacman.tools.TestObserver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -128,6 +129,41 @@ public class PlayerMovementTest {
     }
 
     /**
+     * Scenario S2.4: The player dies
+     * Given the game has started,
+     *  and  my Pacman is next to a cell containing a ghost;
+     * When  I press an arrow key towards that square;
+     * Then  my Pacman dies,
+     *  and  the game is over.
+     */
+    @Test
+    public void playerLosesTest() {
+        before("/player_movements_map_loss_test.txt");
+
+        TestObserver observer = new TestObserver();
+
+        getGame().getLevel().addObserver(observer);
+
+        //Given the game has started
+        assertThat(getGame().isInProgress()).isTrue();
+
+        Player p = getGame().getPlayers().get(0);
+        Square squareWithGhost = p.getSquare().getSquareAt(Direction.WEST);
+
+        //and  my Pacman is next to a cell containing a ghost;
+        assertThat(squareWithGhost.getOccupants().size()).isGreaterThanOrEqualTo(1);
+        assertThat(squareWithGhost.getOccupants().get(0)).isInstanceOf(Ghost.class);
+
+        assertThat(observer.isObservedLoss()).isFalse();
+
+        //When  I press an arrow key towards that square;
+        getGame().move(p, Direction.WEST);
+
+        //Then  my Pacman dies, and  the game is over.
+        assertThat(observer.isObservedLoss()).isTrue();
+    }
+
+    /**
      * Scenario S2.5: Player wins, extends S2.1
      * When  I have eaten the last pellet;
      * Then  I win the game.
@@ -144,7 +180,6 @@ public class PlayerMovementTest {
         assertThat(getGame().isInProgress()).isTrue();
 
         Player p = getGame().getPlayers().get(0);
-        assertThat(p.getScore()).isEqualTo(0);
         Square squareWithPellet = p.getSquare().getSquareAt(Direction.WEST);
 
         //and  my Pacman is next to a square containing a pellet;
