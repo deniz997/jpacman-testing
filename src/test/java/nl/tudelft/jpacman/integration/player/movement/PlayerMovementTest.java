@@ -6,8 +6,8 @@ import nl.tudelft.jpacman.board.Square;
 import nl.tudelft.jpacman.game.Game;
 import nl.tudelft.jpacman.level.Pellet;
 import nl.tudelft.jpacman.level.Player;
+import nl.tudelft.jpacman.tools.TestObserver;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,10 +20,10 @@ public class PlayerMovementTest {
 
     /**
      * Start a launcher, which can display the user interface.
+     * @param mapName the name of the map we want to load for the test
      */
-    @BeforeEach
-    public void before() {
-        launcher = new Launcher().withMapFile("/player_movements_map_test.txt");
+    public void before(String mapName) {
+        launcher = new Launcher().withMapFile(mapName);
         launcher.launch();
         getGame().start();
     }
@@ -39,6 +39,8 @@ public class PlayerMovementTest {
      */
     @Test
     public void playerConsumesTest() {
+        before("/player_movements_map_test.txt");
+
         //Given the game has started
         assertThat(getGame().isInProgress()).isTrue();
 
@@ -75,6 +77,8 @@ public class PlayerMovementTest {
      */
     @Test
     public void playerMovesOnEmptySquareTest() {
+        before("/player_movements_map_test.txt");
+
         //Given the game has started
         assertThat(getGame().isInProgress()).isTrue();
 
@@ -104,6 +108,8 @@ public class PlayerMovementTest {
      */
     @Test
     public void playerMovementFailsTest() {
+        before("/player_movements_map_test.txt");
+
         //Given the game has started
         assertThat(getGame().isInProgress()).isTrue();
 
@@ -119,6 +125,41 @@ public class PlayerMovementTest {
 
         //Then  the move is not conducted.
         assertThat(p.getSquare()).isEqualTo(initialSquare);
+    }
+
+    /**
+     * Scenario S2.5: Player wins, extends S2.1
+     * When  I have eaten the last pellet;
+     * Then  I win the game.
+     */
+    @Test
+    public void playerWinsTest() {
+        before("/player_movements_map_win_test.txt");
+
+        TestObserver observer = new TestObserver();
+
+        getGame().getLevel().addObserver(observer);
+
+        //Given the game has started
+        assertThat(getGame().isInProgress()).isTrue();
+
+        Player p = getGame().getPlayers().get(0);
+        assertThat(p.getScore()).isEqualTo(0);
+        Square squareWithPellet = p.getSquare().getSquareAt(Direction.WEST);
+
+        //and  my Pacman is next to a square containing a pellet;
+        assertThat(squareWithPellet.getOccupants().size()).isGreaterThanOrEqualTo(1);
+        assertThat(squareWithPellet.getOccupants().get(0)).isInstanceOf(Pellet.class);
+
+        Pellet pellet = (Pellet) squareWithPellet.getOccupants().get(0);
+
+        assertThat(observer.isObservedWin()).isFalse();
+
+        //When  I have eaten the last pellet;
+        getGame().move(p, Direction.WEST);
+
+        //Then  I win the game.
+        assertThat(observer.isObservedWin()).isTrue();
     }
 
     /**
