@@ -96,6 +96,32 @@ public class PlayerMovementTest {
     }
 
     /**
+     * Scenario S2.3: The move fails
+     * Given the game has started,
+     *   and my Pacman is next to a cell containing a wall;
+     * When  I press an arrow key towards that cell;
+     * Then  the move is not conducted.
+     */
+    @Test
+    public void playerMovementFailsTest() {
+        //Given the game has started
+        assertThat(getGame().isInProgress()).isTrue();
+
+        Player p = getGame().getPlayers().get(0);
+        Square initialSquare = p.getSquare();
+        Square squareNextToPlayer = p.getSquare().getSquareAt(Direction.SOUTH);
+
+        //and my Pacman is next to a cell containing a wall;
+        assertThat(squareNextToPlayer.isAccessibleTo(p)).isFalse();
+
+        //When  I press an arrow key towards that square;
+        getGame().move(p, Direction.SOUTH);
+
+        //Then  the move is not conducted.
+        assertThat(p.getSquare()).isEqualTo(initialSquare);
+    }
+
+    /**
      * Close the user interface.
      */
     @AfterEach
