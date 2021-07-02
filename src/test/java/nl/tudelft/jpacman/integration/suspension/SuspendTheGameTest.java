@@ -22,7 +22,7 @@ public class SuspendTheGameTest {
      */
     @BeforeEach
     public void before() {
-        launcher = new Launcher();
+        launcher = new Launcher().withMapFile("/suspension_map_test.txt");
         launcher.launch();
         getGame().start();
     }
