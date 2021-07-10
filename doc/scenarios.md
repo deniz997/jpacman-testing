@@ -145,6 +145,24 @@ When  the player hits the "Start" button;
 Then  the game is resumed.
 ```
 
+#### Story 5: Handling Level Transitions
+
+```
+As a player,
+ I want to be able to continue playing the game after a win or loss;
+So  that I can continue playing and have fun.
+
+Scenario S5.1: Restart the game.
+Given the game is running;
+When  the player loses the game;
+Then  the game should be reset to its initial position with its initial map.
+
+Scenario S5.2: Continue the game.
+Given the game is running;
+When  the player wins the game;
+Then  the next level in a list of levels is loaded and the game is started again.
+```
+
 ## 3. User Interface
 
 The user interface for JPacman is relatively simple.  The game is
