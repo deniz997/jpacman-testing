@@ -9,6 +9,7 @@ public enum State {
     game_running,
     game_won,
     game_paused,
-    game_over
+    game_over,
+    error
 }
 
