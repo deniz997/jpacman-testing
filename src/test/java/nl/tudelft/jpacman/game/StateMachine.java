@@ -4,6 +4,7 @@ import nl.tudelft.jpacman.Launcher;
 import nl.tudelft.jpacman.board.Direction;
 import nl.tudelft.jpacman.level.Player;
 import nl.tudelft.jpacman.tools.TestObserver;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,6 +19,8 @@ public class StateMachine {
     private TestObserver testObserver;
     private Player player;
 
+    private Launcher launcher;
+
     /**
      * Initializes the game with map.
      *
@@ -26,7 +29,7 @@ public class StateMachine {
 
     public void before(String mapName) {
         testObserver = new TestObserver();
-        Launcher launcher = new Launcher().withMapFile(mapName);
+        launcher = launcher.withMapFile(mapName);
         launcher.launch();
         game = launcher.getGame();
         game.start();
@@ -186,5 +189,21 @@ public class StateMachine {
         } else if (currentState == State.game_paused && transition == Transition.start) {
             game.start();
         }
+    }
+
+    /**
+     * Sets up the launcher variable so that the tests run for the correct launcher.
+     */
+    @BeforeEach
+    protected void setupLauncher() {
+        launcher = new Launcher();
+    }
+
+    /**
+     * Sets up the launcher so these tests can run for multiple launchers.
+     * @param launcher the launcher we want to test.
+     */
+    public void setLauncher(Launcher launcher) {
+        this.launcher = launcher;
     }
 }
