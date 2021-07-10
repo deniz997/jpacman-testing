@@ -5,10 +5,9 @@ package nl.tudelft.jpacman.game;
  */
 
 public enum State {
-    game_launched,
+    game_not_running,
     game_running,
     game_won,
-    game_paused,
     game_over,
     error
 }

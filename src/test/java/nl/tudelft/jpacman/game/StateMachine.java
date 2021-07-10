@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- *
+ * State Machine class that checks the interactions and transitions between states.
  */
 
 public class StateMachine {
@@ -32,20 +32,20 @@ public class StateMachine {
         launcher = launcher.withMapFile(mapName);
         launcher.launch();
         game = launcher.getGame();
+        currentState = inspectCurrentState();
         game.start();
         game.getLevel().addObserver(testObserver);
-        currentState = State.game_launched;
         player = game.getPlayers().get(0);
     }
 
     /**
-     * Test the path from the State Gui launched to the State Game running
+     * Test the path from the State Game not running to the State Game running
      * with transitions start and a3.
      */
     @Test
     public void test_transitions_start_a3() {
         before("/state_machine_test.txt");
-        assertThat(currentState).isEqualTo(State.game_launched);
+        assertThat(currentState).isEqualTo(State.game_not_running);
         trigger(Transition.start);
         currentState = inspectCurrentState();
         assertThat(currentState).isEqualTo(State.game_running);
@@ -55,13 +55,13 @@ public class StateMachine {
     }
 
     /**
-     * Test the path from the State Gui launched to the State Game won
+     * Test the path from the State Game not running to the State Game won
      * with transitions start and a4.
      */
     @Test
     public void test_transitions_start_a4() {
         before("/state_machine_test_won.txt");
-        assertThat(currentState).isEqualTo(State.game_launched);
+        assertThat(currentState).isEqualTo(State.game_not_running);
         trigger(Transition.start);
         currentState = inspectCurrentState();
         assertThat(currentState).isEqualTo(State.game_running);
@@ -71,33 +71,30 @@ public class StateMachine {
     }
 
     /**
-     * Test the path from the State Gui launched to the State Game running through
-     * the path game running, game paused and back to game running again
+     * Test the path from the State Game not running to the State Game running through
+     * the path game running, game not running and back to game running again
      * with transitions start, stop and start.
      */
     @Test
-    public void test_transitions_start_stop_start() {
+    public void test_transitions_start_stop() {
         before("/state_machine_test.txt");
-        assertThat(currentState).isEqualTo(State.game_launched);
+        assertThat(currentState).isEqualTo(State.game_not_running);
         trigger(Transition.start);
         currentState = inspectCurrentState();
         assertThat(currentState).isEqualTo(State.game_running);
         trigger(Transition.stop);
         currentState = inspectCurrentState();
-        assertThat(currentState).isEqualTo(State.game_paused);
-        trigger(Transition.start);
-        currentState = inspectCurrentState();
-        assertThat(currentState).isEqualTo(State.game_running);
+        assertThat(currentState).isEqualTo(State.game_not_running);
     }
 
     /**
-     * Test the path from the State Gui launched to the State Game over
+     * Test the path from the State Game not running to the State Game over
      * with transitions start and a2.
      */
     @Test
     public void test_transitions_start_a2() {
         before("/state_machine_test.txt");
-        assertThat(currentState).isEqualTo(State.game_launched);
+        assertThat(currentState).isEqualTo(State.game_not_running);
         trigger(Transition.start);
         currentState = inspectCurrentState();
         assertThat(currentState).isEqualTo(State.game_running);
@@ -107,13 +104,13 @@ public class StateMachine {
     }
 
     /**
-     * Test the path from the State Gui launched to the State Game over
+     * Test the path from the State Game not running to the State Game over
      * with transitions start and g1.
      */
     @Test
     public void test_transitions_start_g1() {
         before("/state_machine_test_loss.txt");
-        assertThat(currentState).isEqualTo(State.game_launched);
+        assertThat(currentState).isEqualTo(State.game_not_running);
         trigger(Transition.start);
         currentState = inspectCurrentState();
         assertThat(currentState).isEqualTo(State.game_running);
@@ -123,13 +120,13 @@ public class StateMachine {
     }
 
     /**
-     * Test the path from the State Gui launched to the State Game running
+     * Test the path from the State Game not running to the State Game running
      * with transitions start and g2.
      */
     @Test
     public void test_transitions_start_g2() {
         before("/state_machine_test_player_safe.txt");
-        assertThat(currentState).isEqualTo(State.game_launched);
+        assertThat(currentState).isEqualTo(State.game_not_running);
         trigger(Transition.start);
         currentState = inspectCurrentState();
         assertThat(currentState).isEqualTo(State.game_running);
@@ -139,7 +136,7 @@ public class StateMachine {
     }
 
     /**
-     * We need to find out if we are running, paused, won or lost.
+     * We need to find out if the game is running, not running, won or lost.
      *
      * @return state -> we are currently in
      */
@@ -151,7 +148,25 @@ public class StateMachine {
         } else if (testObserver.isObservedWin()) {
             return State.game_won;
         } else {
-            return State.game_paused;
+            return State.game_not_running;
+        }
+    }
+
+    /**
+     * Trigger transitions based on current state.
+     *
+     * @param transition -> transition type
+     */
+
+    public void trigger(Transition transition) {
+        if (currentState == State.game_not_running && transition == Transition.start) {
+            game.start();
+        } else if (currentState == State.game_running) {
+            gameRunningTrigger(transition);
+        }  else if (currentState == State.game_won && transition == Transition.start) {
+            game.start();
+        } else if (currentState == State.game_over && transition == Transition.start) {
+            game.start();
         }
     }
 
@@ -159,35 +174,30 @@ public class StateMachine {
      * Trigger transitions based on current state.
      * @param transition -> transition type
      */
-
-    public void trigger(Transition transition) {
+    public void gameRunningTrigger(Transition transition) {
         final long sleepTime = 500L;
-        if (currentState == State.game_launched && transition == Transition.start) {
-            game.start();
-        } else if (currentState == State.game_running && transition == Transition.stop) {
+        if (transition == Transition.stop) {
             game.stop();
-        } else if (currentState == State.game_running && transition == Transition.a1) {
+        } else if (transition == Transition.a1) {
             game.move(player, Direction.NORTH);
-        } else if (currentState == State.game_running && transition == Transition.a2) {
+        } else if (transition == Transition.a2) {
             game.move(player, Direction.EAST);
-        } else if (currentState == State.game_running && transition == Transition.a3) {
+        } else if (transition == Transition.a3) {
             game.move(player, Direction.WEST);
-        } else if (currentState == State.game_running && transition == Transition.a4) {
+        } else if (transition == Transition.a4) {
             game.move(player, Direction.WEST);
-        } else if (currentState == State.game_running && transition == Transition.g1) {
+        } else if (transition == Transition.g1) {
             try {
                 Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
                 currentState = State.error;
             }
-        } else if (currentState == State.game_running && transition == Transition.g2) {
+        } else if (transition == Transition.g2) {
             try {
                 Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
                 currentState = State.error;
             }
-        } else if (currentState == State.game_paused && transition == Transition.start) {
-            game.start();
         }
     }
 
@@ -201,9 +211,26 @@ public class StateMachine {
 
     /**
      * Sets up the launcher so these tests can run for multiple launchers.
+     *
      * @param launcher the launcher we want to test.
      */
     public void setLauncher(Launcher launcher) {
         this.launcher = launcher;
+    }
+
+    /**
+     * Gets the current state.
+     * @return currentState the state program is in
+     */
+    public State getCurrentState() {
+        return currentState;
+    }
+
+    /**
+     * Sets the current state.
+     * @param currentState the state program is in
+     */
+    public void setCurrentState(State currentState) {
+        this.currentState = currentState;
     }
 }

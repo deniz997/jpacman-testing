@@ -3,8 +3,8 @@ package nl.tudelft.jpacman.game;
 
 /**
  * n is the number of remaining pellets.
- * Start -> start button
- * Stop -> stop button
+ * Start -> Start button
+ * Stop -> Stop button
  * a1 -> Arrow keys [Player moves towards an empty square]
  * a2 -> Arrow keys [Player moves towards a ghost]
  * a3 -> Arrow keys [Player moves towards a pellet & n!=1]
