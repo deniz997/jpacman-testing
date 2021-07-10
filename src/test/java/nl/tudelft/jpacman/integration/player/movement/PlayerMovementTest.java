@@ -42,15 +42,11 @@ public class PlayerMovementTest {
     public void playerConsumesTest() {
         before("/player_movements_map_test.txt");
 
-        //Given the game has started
-        assertThat(getGame().isInProgress()).isTrue();
-
         Player p = getGame().getPlayers().get(0);
         assertThat(p.getScore()).isEqualTo(0);
         Square squareWithPellet = p.getSquare().getSquareAt(Direction.WEST);
 
         //and  my Pacman is next to a square containing a pellet;
-        assertThat(squareWithPellet.getOccupants().size()).isGreaterThanOrEqualTo(1);
         assertThat(squareWithPellet.getOccupants().get(0)).isInstanceOf(Pellet.class);
 
         Pellet pellet = (Pellet) squareWithPellet.getOccupants().get(0);
@@ -185,8 +181,6 @@ public class PlayerMovementTest {
         //and  my Pacman is next to a square containing a pellet;
         assertThat(squareWithPellet.getOccupants().size()).isGreaterThanOrEqualTo(1);
         assertThat(squareWithPellet.getOccupants().get(0)).isInstanceOf(Pellet.class);
-
-        Pellet pellet = (Pellet) squareWithPellet.getOccupants().get(0);
 
         assertThat(observer.isObservedWin()).isFalse();
 
