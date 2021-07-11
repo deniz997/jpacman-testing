@@ -61,7 +61,6 @@ public class MultiLevelLauncherTest extends StateMachine {
     @Test
     public void testGameStopsAfterLastMap() {
         before("/state_machine_test_won.txt");
-        assertThat(getCurrentState()).isEqualTo(State.game_not_running);
         trigger(Transition.start);
         setCurrentState(inspectCurrentState());
         assertThat(getCurrentState()).isEqualTo(State.game_running);
