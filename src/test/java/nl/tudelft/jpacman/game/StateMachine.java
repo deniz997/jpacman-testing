@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class StateMachine {
     private State currentState;
     private TestObserver testObserver;
-    private Player player;
 
     private Launcher launcher;
 
@@ -33,7 +32,6 @@ public class StateMachine {
         currentState = inspectCurrentState();
         getGame().start();
         getGame().getLevel().addObserver(testObserver);
-        player = getGame().getPlayers().get(0);
     }
 
     /**
@@ -177,13 +175,13 @@ public class StateMachine {
         if (transition == Transition.stop) {
             getGame().stop();
         } else if (transition == Transition.a1) {
-            getGame().move(player, Direction.NORTH);
+            getGame().move(getPlayer(), Direction.NORTH);
         } else if (transition == Transition.a2) {
-            getGame().move(player, Direction.EAST);
+            getGame().move(getPlayer(), Direction.EAST);
         } else if (transition == Transition.a3) {
-            getGame().move(player, Direction.WEST);
+            getGame().move(getPlayer(), Direction.WEST);
         } else if (transition == Transition.a4) {
-            getGame().move(player, Direction.WEST);
+            getGame().move(getPlayer(), Direction.WEST);
         } else if (transition == Transition.g1) {
             try {
                 Thread.sleep(sleepTime);
@@ -234,5 +232,9 @@ public class StateMachine {
 
     private Game getGame() {
         return launcher.getGame();
+    }
+
+    private Player getPlayer() {
+        return getGame().getPlayers().get(0);
     }
 }

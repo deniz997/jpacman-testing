@@ -11,7 +11,7 @@ import nl.tudelft.jpacman.points.PointCalculatorLoader;
 public class MultiLevelLauncher extends Launcher {
     private MultiLevelGame multiGame;
 
-    private final String[] levels = {"/board.txt", "/board2.txt", "/board3.txt"};
+    private String[] levels = {"/board.txt", "/board2.txt", "/board3.txt"};
 
     private int currentLevel = 0;
 
@@ -55,6 +55,12 @@ public class MultiLevelLauncher extends Launcher {
         dispose();
         launch();
         getGame().start();
+    }
+
+    @Override
+    public Launcher withMapFile(String fileName) {
+        levels = new String[]{fileName, fileName};
+        return this;
     }
 
     /**

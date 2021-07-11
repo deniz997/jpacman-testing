@@ -54,4 +54,28 @@ public class MultiLevelLauncherTest extends StateMachine {
         setCurrentState(inspectCurrentState());
         assertThat(getCurrentState()).isEqualTo(State.game_running);
     }
+
+    /**
+     * Test that we cannot continue the game after the last map.
+     */
+    @Test
+    public void testGameStopsAfterLastMap() {
+        before("/state_machine_test_won.txt");
+        assertThat(getCurrentState()).isEqualTo(State.game_not_running);
+        trigger(Transition.start);
+        setCurrentState(inspectCurrentState());
+        assertThat(getCurrentState()).isEqualTo(State.game_running);
+        trigger(Transition.a4);
+        setCurrentState(inspectCurrentState());
+        assertThat(getCurrentState()).isEqualTo(State.game_won);
+        trigger(Transition.start);
+        setCurrentState(inspectCurrentState());
+        assertThat(getCurrentState()).isEqualTo(State.game_running);
+        trigger(Transition.a4);
+        setCurrentState(inspectCurrentState());
+        assertThat(getCurrentState()).isEqualTo(State.game_won);
+        trigger(Transition.start);
+        setCurrentState(inspectCurrentState());
+        assertThat(getCurrentState()).isEqualTo(State.game_won);
+    }
 }
