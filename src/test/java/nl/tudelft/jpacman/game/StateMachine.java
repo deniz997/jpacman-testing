@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 
 public class StateMachine {
-    private Game game;
     private State currentState;
     private TestObserver testObserver;
     private Player player;
@@ -31,11 +30,10 @@ public class StateMachine {
         testObserver = new TestObserver();
         launcher = launcher.withMapFile(mapName);
         launcher.launch();
-        game = launcher.getGame();
         currentState = inspectCurrentState();
-        game.start();
-        game.getLevel().addObserver(testObserver);
-        player = game.getPlayers().get(0);
+        getGame().start();
+        getGame().getLevel().addObserver(testObserver);
+        player = getGame().getPlayers().get(0);
     }
 
     /**
@@ -141,7 +139,7 @@ public class StateMachine {
      * @return state -> we are currently in
      */
     public State inspectCurrentState() {
-        if (game.isInProgress()) {
+        if (getGame().isInProgress()) {
             return State.game_running;
         } else if (testObserver.isObservedLoss()) {
             return State.game_over;
@@ -160,13 +158,13 @@ public class StateMachine {
 
     public void trigger(Transition transition) {
         if (currentState == State.game_not_running && transition == Transition.start) {
-            game.start();
+            getGame().start();
         } else if (currentState == State.game_running) {
             gameRunningTrigger(transition);
         }  else if (currentState == State.game_won && transition == Transition.start) {
-            game.start();
+            getGame().start();
         } else if (currentState == State.game_over && transition == Transition.start) {
-            game.start();
+            getGame().start();
         }
     }
 
@@ -177,15 +175,15 @@ public class StateMachine {
     public void gameRunningTrigger(Transition transition) {
         final long sleepTime = 500L;
         if (transition == Transition.stop) {
-            game.stop();
+            getGame().stop();
         } else if (transition == Transition.a1) {
-            game.move(player, Direction.NORTH);
+            getGame().move(player, Direction.NORTH);
         } else if (transition == Transition.a2) {
-            game.move(player, Direction.EAST);
+            getGame().move(player, Direction.EAST);
         } else if (transition == Transition.a3) {
-            game.move(player, Direction.WEST);
+            getGame().move(player, Direction.WEST);
         } else if (transition == Transition.a4) {
-            game.move(player, Direction.WEST);
+            getGame().move(player, Direction.WEST);
         } else if (transition == Transition.g1) {
             try {
                 Thread.sleep(sleepTime);
@@ -232,5 +230,9 @@ public class StateMachine {
      */
     public void setCurrentState(State currentState) {
         this.currentState = currentState;
+    }
+
+    private Game getGame() {
+        return launcher.getGame();
     }
 }

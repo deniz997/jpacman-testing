@@ -43,7 +43,7 @@ public class GameFactory {
      * Creates a game for a multi level with one player.
      *
      * @param level
-     *            The levels to create a game for.
+     *            The level to create a game for.
      * @param pointCalculator
      *             The way to calculate points upon collisions.
      * @return A new single player game.

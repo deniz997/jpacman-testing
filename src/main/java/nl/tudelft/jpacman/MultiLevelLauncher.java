@@ -1,8 +1,8 @@
 package nl.tudelft.jpacman;
 
+import nl.tudelft.jpacman.game.Game;
 import nl.tudelft.jpacman.game.GameFactory;
 import nl.tudelft.jpacman.game.MultiLevelGame;
-import nl.tudelft.jpacman.level.Level;
 import nl.tudelft.jpacman.points.PointCalculatorLoader;
 
 /**
@@ -11,16 +11,18 @@ import nl.tudelft.jpacman.points.PointCalculatorLoader;
 public class MultiLevelLauncher extends Launcher {
     private MultiLevelGame multiGame;
 
-    /**
-     * Constructor initializing game.
-     */
-    public MultiLevelLauncher() {
-        multiGame = makeGame();
+    private final String[] levels = {"/board.txt", "/board2.txt", "/board3.txt"};
+
+    private int currentLevel = 0;
+
+    @Override
+    public Game getGame() {
+        return multiGame;
     }
 
     @Override
-    public MultiLevelGame getGame() {
-        return multiGame;
+    protected String getLevelMap() {
+        return levels[currentLevel];
     }
 
     /**
@@ -29,11 +31,37 @@ public class MultiLevelLauncher extends Launcher {
      * @return a new Game.
      */
     @Override
-    public MultiLevelGame makeGame() {
+    public Game makeGame() {
         GameFactory gf = getGameFactory();
-        Level level = makeLevel();
         multiGame = gf.createSinglePlayerGameWithMultipleLevels(
-            level, new PointCalculatorLoader().load());
+            makeLevel(), new PointCalculatorLoader().load());
+        multiGame.registerRestartRunnable(this::restartGame);
+        multiGame.registerLoadNextLevelRunnable(this::loadNextLevel);
         return multiGame;
+    }
+
+    private void restartGame() {
+        currentLevel = 0;
+        dispose();
+        launch();
+        getGame().start();
+    }
+
+    private void loadNextLevel() {
+        if (currentLevel + 1 >= levels.length) {
+            return;
+        }
+        currentLevel += 1;
+        dispose();
+        launch();
+        getGame().start();
+    }
+
+    /**
+     * Starts a multi level pacman game.
+     * @param args arguments passed on the command line
+     */
+    public static void main(String[] args) {
+        new MultiLevelLauncher().launch();
     }
 }
