@@ -1,5 +1,5 @@
 # JPacman
-This project was the product of the assignments given during Software Testing course at the University of Potsdam SoSe'21. Exercises solved can be found in the project folder along with the answers and explainations of the code.
+This project was the product of the assignments given during Software Testing course at the University of Potsdam SoSe'21.
 
 [![Build Status](https://travis-ci.com/SERG-Delft/jpacman.svg?branch=master)](https://travis-ci.com/SERG-Delft/jpacman)
 
