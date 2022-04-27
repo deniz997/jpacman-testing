@@ -1,5 +1,5 @@
 # JPacman
-This project was the product of the assignments given during Software Testing course at the University of Potsdam SoSe'21.
+This project was the product of the assignments given during Software Testing course at the University of Potsdam SoSe'21. You can find the detailed explanation of each test phase in *Lab_Report_Software_Testing* file.
 
 [![Build Status](https://travis-ci.com/SERG-Delft/jpacman.svg?branch=master)](https://travis-ci.com/SERG-Delft/jpacman)
 
